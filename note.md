@@ -859,6 +859,57 @@ TCP的拥塞控制
 
 # 六
 
+Application program can be divided into :
+
+- direct: browser, email, FTP, Telnet
+- indirect: word resource manager (via redirector)
+
+Using IP addresses as absolute machine addresses on theInternet is not very practical, two reasons:
+
+- Computers can frequently change IPs, rendering using anIP address to access the machine useless.
+- A system of using a name to access the machine was devised to overcome this problem.
+- Be not easy to remember IP
+
+- DNS is a hierarchical, domain-based naming scheme and adistributed database system for implementing this namingscheme
+  Usage:
+  Map name onto an IP address, an application program callsan library procedure, called resolver, passing it the name as aparameter (i.e. gethostbyname() is an resolver)
+- The resolver sends **UDP** packet to a local DNS server whichlooks up the name and returns the IP address to the resolver
+- The resolver returns the IP address to the application, whichcan establish an TCP connection with the destination (or sendUDP packets).
+
+域名
+
+域名可以为绝对，以点结尾，可以为相对，不以点结尾
+
+200多个顶级域
+
+Each domain is named by the path upward from it to the(unnamed) root. The components are separated by periods(pronounced "dot")
+Can be either absolute (ends with a period i.e.eng.sun.com.) or relative (it doesn't end with a dot)
+
+Relative ones have to be interpreted in a context to find the true meaning
+Both of them refers to a specific node in the tree and all the nodes under it
+
+Are case insensitive (edu, Edu, EDU are same thing)
+
+Components **names can be up to 63 characters** and fullnames should not exceed 255 characters.
+
+
+
+resource record:
+
+- domain name
+- time to live
+- class
+- type
+- value
+
+Every domain, either single host or a top level domain, should have a set of resource records
+
+when a resolver gives a domain name to DNS, what it gets back are the resource record associated with that name; thus the primary function of DNS is to map domain names onto resource records
+
+
+
+
+
 DNS： 域名转为IP
 
 ![image-20221022161141207](img/image-20221022161141207.png)
@@ -886,3 +937,56 @@ FTP协议
 ![image-20221022164151883](img/image-20221022164151883.png)
 
 ![image-20221022164759647](img/image-20221022164759647.png)
+
+
+
+# 实验
+
+## 设备
+
+集线器 广播
+
+交换机 过滤 准确的发送
+
+上面两个是对于一个网络的（这个理解好像不是很对）
+
+路由是连接不同网络号的
+
+- 路由器的端口要进行设置
+- 该端口对应的主机们的默认网关也要进行设置，默认网络其实是默认路由
+
+## vlan
+
+划分VLAN是在交换机上进行的
+
+把端口对应那个vlan就行
+
+不同的vlan就是不同的广播域
+
+```
+#交换机的命令设置vlan
+enable
+config terminal
+vlan 3
+name VLAN3
+end
+```
+
+不同广播域之间的主机，尽管连着同一个路由器，但是不属于同一个vlan，也是ping不了
+
+两个路由器，配置同一种vlan，相连的端口类型为truck
+
+
+
+当一个主机ping另外一个网络的主机时，会首先检查目标是不是和自己在同一个网络下， 不是的话就会交给默认网关，也就是默认路由，所以要配置路由器的端口与网络的匹配和主机的网关配置
+
+第一次ping超时的原因是arp请求为了获得目标的MAC的地址
+
+
+
+rip是看路由器的数量，也就是距离
+
+OSPF 会计算带宽之类的，
+
+
+
